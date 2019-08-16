@@ -1,0 +1,54 @@
+filebeat.config:
+  prospectors:
+    path: ${path.config}/prospectors.d/*.yml
+    reload.enabled: false
+  modules:
+    path: ${path.config}/modules.d/*.yml
+    reload.enabled: false
+
+filebeat.inputs:
+- type: log
+  fields_under_root: true
+  paths:
+    - /usr/share/filebeat/example_data/earthquake/ncedc-earthquakes-dataset/earthquakes.txt
+  fields:
+    type: earthquake
+
+- type: log
+  fields_under_root: true
+  paths:
+    - /usr/share/filebeat/example_data/earthquake/ncedc-earthquakes-dataset/blasts.txt
+  fields:
+    type: blast
+
+processors:
+- add_cloud_metadata:
+
+output.elasticsearch:
+  hosts: ['elasticsearch:9200']
+  protocol: "https"
+  username: elastic
+  # Read PW from filebeat.keystore
+  password: "${ELASTIC_PASSWORD}"
+  ssl.certificate_authorities: ["/usr/share/filebeat/certs/ca/ca.crt"]
+  template:
+    path: "/usr/share/filebeat/example_data/earthquake/ncedc-earthquakes-template.json"
+  index: "ncedc-earthquakes"
+  pipeline: ncedc-earthquakes
+  indices:
+    - index: "ncedc-earthquakes-earthquake"
+      when.equals:
+        type: "earthquake"
+    - index: "ncedc-earthquakes-blast"
+      when.equals:
+        type: "blast"
+
+setup.kibana:
+  host: "http://kibana:5601"
+  username: elastic
+  password: "${ELASTIC_PASSWORD}"
+  protocol: "http"
+  ssl.enabled: false
+  ssl.certificate_authorities: ["/usr/share/filebeat/certs/ca/ca.crt"]
+
+xpack.monitoring.enabled: true
