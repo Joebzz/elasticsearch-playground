@@ -63,3 +63,6 @@ Point a browser at [`http://localhost:5601`](http://localhost:5601) to see the r
 
 Log in with `elastic` and what ever your auto generated elastic password is from the
 setup.
+
+## Sample Data
+For importing Sample Data (Quakes) i followed the instructions here https://www.elastic.co/blog/aftershock-therapy-with-elasticsearch-and-csv-data-import
