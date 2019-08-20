@@ -13,7 +13,6 @@ services:
     volumes:
       - './config:/config'
       - './scripts/setup-elasticsearch.sh:/usr/local/bin/setup-elasticsearch.sh:ro'
-      - './example_data:/usr/share/filebeat/example_data'
 
   setup_kibana:
     image: docker.elastic.co/kibana/kibana:${TAG}
@@ -38,7 +37,6 @@ services:
       - './config:/config'
       - './scripts/setup-logstash.sh:/usr/local/bin/setup-logstash.sh:ro'
       - './config/ssl/ca/ca.crt:/usr/share/logstash/config/ca/ca.crt'
-      - './example_data:/usr/share/logstash/example_data'
     depends_on: ['elasticsearch']
     networks: ['stack']
 
@@ -66,7 +64,6 @@ services:
       - './config:/config'
       - './scripts/setup-beat.sh:/usr/local/bin/setup-beat.sh:ro'
       - './config/filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml'
-      - './example_data:/usr/share/filebeat/example_data'
       - './config/ssl/ca/ca.crt:/usr/share/filebeat/certs/ca/ca.crt'
     command: ['/bin/bash', '-c', 'cat /usr/local/bin/setup-beat.sh | tr -d "\r" | bash -s filebeat']
     environment: ['ELASTIC_PASSWORD=${ELASTIC_PASSWORD}']

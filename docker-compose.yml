@@ -125,7 +125,6 @@ services:
         target: /usr/share/filebeat/certs/ca/ca.crt
     volumes:
       - './scripts/setup-beat.sh:/usr/local/bin/setup-beat.sh:ro'
-      - './example_data:/usr/share/filebeat/example_data'
     networks: ['stack']
     depends_on: ['elasticsearch', 'kibana']
     healthcheck:
@@ -242,7 +241,7 @@ services:
 networks: {stack: {}}
 # use docker volume to persist ES data outside of a container.
 volumes:
-  es_data: 
+  es_data:
 
 secrets:
   ca.crt:
